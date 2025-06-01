@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: gestion_s4
+    runtime: docker
+    repo: https://github.com/NY-ANDRY/gestion_s4
+    plan: free
+    dockerfilePath: ./Dockerfile
