@@ -27,6 +27,10 @@ WORKDIR /var/www/html
 # Copier tout le projet
 COPY --from=build /app /var/www/html
 
+# Donner les permissions nécessaires à Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
 # Configurer Apache pour pointer vers /public
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html/public\n\
