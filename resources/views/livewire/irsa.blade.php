@@ -3,7 +3,7 @@
     <div class="pl-2">
         <div class="pt-1 text-xl font-[is-m]">Calcul dette irsa</div>
         <div class="p-2 flex items-center gap-4 pt-4">
-            <label for="">Montant: </label>
+            <label for="">Revenu net imposable: </label>
             <input type="number" wire:model="montant" class="border-b-1 border-neutral-500">
             <button wire:click="calcul" class="h-8 bg-blue-600 text-white rounded-sm px-4">valider</button>
         </div>
@@ -13,7 +13,7 @@
             <div class="flex min-w-full h-14 font-[is-m] border-b-1 border-gray-300 text-neutral-400">
                 <div class="flex items-center w-2/6">range</div>
                 <div class="flex items-center w-1/6">rate</div>
-                <div class="flex items-center w-2/6">value</div>
+                <div class="flex items-center w-2/6">montant</div>
                 <div class="flex items-center w-1/6">irsa</div>
             </div>
             @foreach ($total_dettes["details"] as $key => $irsa_dette)
