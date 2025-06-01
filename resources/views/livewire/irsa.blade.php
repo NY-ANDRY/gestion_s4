@@ -38,7 +38,7 @@
             </div>
             @endforeach
         </div>
-        <div class="pt-4 font-[is-m] text-xl text-neutral-800">IRSA: {{ $total_dettes["value"] }}</div>
+        <div class="pt-4 font-[is-m] text-xl text-neutral-800">IRSA: {{ number_format($total_dettes["value"],2) }}</div>
         @endif
     </div>
 </div>
