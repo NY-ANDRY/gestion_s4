@@ -9,3 +9,58 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+body {
+    background-color: #fdfdfc;
+}
+
+th {
+  font-weight: normal;
+  text-align: left;
+  /* padding-left: 40px; */
+}
+td {
+  /* min-width: 240px; */
+  /* padding-left: 40px; */
+}
+button {
+  cursor: pointer;
+}
+input:focus {
+  outline: none;
+}
+input::selection {
+  outline: none;
+  border: 0;
+}
+#nprogress .bar {
+  background: #29d;
+}
+.active {
+  @apply bg-gray-100 text-neutral-800;
+}
+@font-face {
+  font-family: "is";
+  src: url("../fonts/InstrumentSans-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "is-i";
+  src: url("../fonts/InstrumentSans-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "is-m";
+  src: url("../fonts/InstrumentSans-Medium.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "is-b";
+  src: url("../fonts/InstrumentSans-Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
