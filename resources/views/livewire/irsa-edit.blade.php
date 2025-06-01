@@ -16,6 +16,9 @@
                 </div>
                 <div class="w-20 ">
                     {{ is_numeric($irsa_dette["end"]) ? number_format($irsa_dette["end"]) : $irsa_dette["end"] }}
+                    @if (empty($irsa_dette["end"]))
+                    et plus
+                    @endif
                 </div>
             </div>
             <div class="flex items-center w-1/3 h-10">{{ $irsa_dette["rate"] }} %</div>
@@ -23,7 +26,7 @@
         </div>
         @endforeach
 
-        <form wire:submit="save" class="flex flex-col h-14 border-t-1 border-gray-300">
+        <form wire:submit="save" class="flex flex-col h-14 border-t-1 pt-1 mt-1 border-gray-300">
             <div class="flex pt-2">
                 <div class="flex items-center gap-4">
                     <label for="">max</label>
@@ -38,7 +41,7 @@
                 </div>
 
                 <div class="flex items-center">
-                    <button type="submit" class="h-8 bg-blue-600 text-white rounded-md px-4">Save</button>
+                    <button type="submit" class="h-8 bg-blue-600 text-white rounded-sm px-4">Save</button>
                 </div>
             </div>
             @if (session()->has('error'))
