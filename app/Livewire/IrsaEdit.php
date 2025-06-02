@@ -6,16 +6,26 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 
 use App\Models\Irsa_dettes;
+use App\Models\Irsa_mins;
+use Livewire\Attributes\Validate;
 
 class IrsaEdit extends Component
 {
 
     public $irsa_dettes;
+    public $irsa_min;
 
     public $newRange = 0;
     public $newRate = 0;
+    public $newMin = 0;
 
     public function mount()
+    {
+        $this->updateTable1();
+        $this->irsa_min = Irsa_mins::first();
+    }
+
+    private function updateTable1()
     {
         $irsa_dette = new Irsa_dettes();
         $this->irsa_dettes = $irsa_dette->getDetails();
@@ -28,8 +38,9 @@ class IrsaEdit extends Component
             $irsa_dette->delete();
         }
         session()->flash('status', 'Post successfully updated.');
-        $this->redirect('/irsa/edit');
+        $this->updateTable1();
     }
+
     public function save()
     {
         $irsa_dette = new Irsa_dettes();
@@ -46,7 +57,20 @@ class IrsaEdit extends Component
         }
         $irsa_dette->save();
         session()->flash('status', 'Post successfully updated.');
-        $this->redirect('/irsa/edit');
+        $this->updateTable1();
+    }
+
+    public function updateMin()
+    {
+        if ((empty($this->newMin) && $this->newMin != 0) || (!is_numeric($this->newMin))) {
+            session()->flash('errorMin', 'Please enter a valid minimum value. (' . $this->newMin . ')');
+            return;
+        }
+        Irsa_mins::truncate();
+        $irsa_mins = new Irsa_mins();
+        $irsa_mins->value = $this->newMin;
+        $irsa_mins->save();
+        $this->irsa_min = Irsa_mins::first();
     }
 
     #[Layout('components.layouts.irsa')]

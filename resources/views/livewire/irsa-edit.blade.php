@@ -50,5 +50,24 @@
             </div>
             @endif
         </form>
+
+        <form wire:submit="updateMin" class="flex flex-col h-14 border-t-1 pt-1 mt-1 border-gray-300">
+            <div class="pt-4 font-[is-m] text-neutral-500 text-md">Minimum : <span class="pl-2">{{ $irsa_min["value"] }}</span> </div>
+            <div class="flex pt-2">
+                <div class="flex items-center gap-4">
+                    <label for="">min</label>
+                    <input type="number" wire:model="newMin" class="w-32 text-center border-b-1 border-gray-400 rounded-sm focus:outline-none focus:ring-2 focus:border-none" />
+                    <div>@error('title') {{ $message }} @enderror</div>
+                </div>
+                <div class="flex items-center">
+                    <button type="submit" class="h-8 bg-blue-600 text-white rounded-sm px-4">Save</button>
+                </div>
+            </div>
+            @if (session()->has('errorMin'))
+            <div class="alert alert-danger">
+                {{ session('errorMin') }}
+            </div>
+            @endif
+        </form>
     </div>
 </div>

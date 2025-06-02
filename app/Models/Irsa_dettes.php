@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Irsa_mins;
 
 class Irsa_dettes extends Model
 {
@@ -57,6 +58,11 @@ class Irsa_dettes extends Model
             $result['details'][$i]['value'] = $cur_value;
             $result['details'][$i]['irsa'] = $value_irsa;
             $result["value"] += $value_irsa;
+        }
+
+        $irsa_min = Irsa_mins::first();
+        if (!empty($irsa_min) && $result["value"] <= $irsa_min->value) {
+            $result['value'] = $irsa_min->value;
         }
 
         return $result;

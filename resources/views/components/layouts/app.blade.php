@@ -17,7 +17,6 @@
 
                     <a href="/" wire:navigate class="text-2xl font-[is-b] mr-8 text-gray-900">{{ $title ?? 'Gestion' }}</a>
                     <a class="min-h-full" href="/irsa" wire:navigate>irsa</a>
-                    <a class="min-h-full" href="/" wire:navigate>about</a>
 
                 </nav>
                 <div class="menu">
