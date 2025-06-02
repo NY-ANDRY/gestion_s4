@@ -52,7 +52,7 @@
         </form>
 
         <form wire:submit="updateMin" class="flex flex-col h-14 border-t-1 pt-1 mt-1 border-gray-300">
-            <div class="pt-4 font-[is-m] text-neutral-500 text-md">Minimum : <span class="pl-2">{{ $irsa_min["value"] }}</span> </div>
+            <div class="pt-4 font-[is-m] text-neutral-500 text-md">Minimum : <span class="pl-2">{{ $irsa_min["value"] ?? 0 }}</span> </div>
             <div class="flex pt-2">
                 <div class="flex items-center gap-4">
                     <label for="">min</label>
