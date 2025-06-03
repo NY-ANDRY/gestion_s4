@@ -3,8 +3,10 @@
         <div class="flex flex-col w-36 mr-12 gap-2">
             @php
                 $links = [
-                    ['label' => 'Calcul', 'href' => '/irsa', 'match' => 'irsa'],
-                    ['label' => 'Edit',   'href' => '/irsa/edit', 'match' => 'irsa/edit'],
+                    ['label' => 'Compte', 'href' => '/compta', 'match' => 'compta'],
+                    ['label' => 'Journaux', 'href' => '/compta/journaux', 'match' => 'compta/journaux'],
+                    ['label' => 'Exercices', 'href' => '/compta/exercices', 'match' => 'compta/exercices'],
+                    ['label' => 'Ecritures', 'href' => '/compta/ecritures', 'match' => 'compta/ecritures']
                 ];
             @endphp
 

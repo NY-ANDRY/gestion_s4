@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Irsa;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Irsa_mins;
+use App\Models\Irsa\Irsa_mins;
 
 class Irsa_dettes extends Model
 {

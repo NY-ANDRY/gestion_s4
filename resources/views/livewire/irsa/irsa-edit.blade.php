@@ -26,7 +26,7 @@
         </div>
         @endforeach
 
-        <form wire:submit="save" class="flex flex-col h-14 border-t-1 pt-1 mt-1 border-gray-300">
+        <form wire:submit="save" class="flex flex-col min-h-14 border-t-1 pt-1 mt-1 border-gray-300">
             <div class="flex pt-2">
                 <div class="flex items-center gap-4">
                     <label for="">max</label>
@@ -45,13 +45,13 @@
                 </div>
             </div>
             @if (session()->has('error'))
-            <div class="alert alert-danger">
+            <div class="py-2">
                 {{ session('error') }}
             </div>
             @endif
         </form>
 
-        <form wire:submit="updateMin" class="flex flex-col h-14 border-t-1 pt-1 mt-1 border-gray-300">
+        <form wire:submit="updateMin" class="flex flex-col min-h-14 border-t-1 pt-1 mt-1 border-gray-300">
             <div class="pt-4 font-[is-m] text-neutral-500 text-md">Minimum : <span class="pl-2">{{ empty($irsa_min) ? 0 : $irsa_min["value"] }}</span> </div>
             <div class="flex pt-2">
                 <div class="flex items-center gap-4">

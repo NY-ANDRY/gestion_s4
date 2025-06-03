@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Irsa;
 
-use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\Attributes\Layout;
 
-use App\Models\Irsa_dettes;
+use App\Models\Irsa\Irsa_dettes;
 
+#[Layout('components.layouts.irsa')]
 class Irsa extends Component
 {
     public $montant;
@@ -24,9 +25,4 @@ class Irsa extends Component
         $this->total_dettes = $result;
     }
 
-    #[Layout('components.layouts.irsa')]
-    public function render()
-    {
-        return view('livewire.irsa');
-    }
 }

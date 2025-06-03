@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Irsa;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
-use App\Models\Irsa_dettes;
-use App\Models\Irsa_mins;
-use Livewire\Attributes\Validate;
+use App\Models\Irsa\Irsa_dettes;
+use App\Models\Irsa\Irsa_mins;
 
+#[Layout('components.layouts.irsa')]
 class IrsaEdit extends Component
 {
 
@@ -73,9 +73,4 @@ class IrsaEdit extends Component
         $this->irsa_min = Irsa_mins::first();
     }
 
-    #[Layout('components.layouts.irsa')]
-    public function render()
-    {
-        return view('livewire.irsa-edit');
-    }
 }

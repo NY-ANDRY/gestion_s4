@@ -16,7 +16,10 @@
                 <div class="flex items-center w-2/6">montant</div>
                 <div class="flex items-center w-1/6">irsa</div>
             </div>
+
+            @if (!empty($total_dettes["details"]))
             @foreach ($total_dettes["details"] as $key => $irsa_dette)
+
             <div class="flex min-w-full">
                 <div class="flex items-center w-2/6 h-10">
                     <div class="w-20 ">
@@ -36,7 +39,10 @@
                 <div class="flex items-center w-2/6 ">{{ $irsa_dette["value"] }}</div>
                 <div class="flex items-center w-1/6 ">{{ $irsa_dette["irsa"] }}</div>
             </div>
+
             @endforeach
+            @endif
+
         </div>
         <div class="pt-4 font-[is-m] text-xl text-neutral-800">IRSA: {{ number_format($total_dettes["value"],2) }}</div>
         @endif

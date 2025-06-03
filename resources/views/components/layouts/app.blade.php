@@ -15,10 +15,26 @@
             <header class="flex justify-between items-center p-8 pl-14">
                 <nav class="flex items-center gap-8 text-gray-500 font-[is-m]">
 
-                    <a href="/" wire:navigate class="text-2xl font-[is-b] mr-8 text-gray-900">{{ $title ?? 'Gestion' }}</a>
-                    <a class="min-h-full" href="/irsa" wire:navigate>irsa</a>
+                    <a href="/" wire:navigate class="text-2xl font-[is-b] mr-8 text-gray-900">
+                        {{ $title ?? 'Gestion' }}
+                    </a>
 
+                    @php
+                    $navLinks = [
+                    ['label' => 'compta', 'href' => '/compta', 'match' => 'compta'],
+                    ['label' => 'irsa', 'href' => '/irsa', 'match' => 'irsa'],
+                    ];
+                    @endphp
+
+                    @foreach ($navLinks as $link)
+                    <a href="{{ $link['href'] }}" wire:navigate wire:key="{{ $link['href'] }}"
+                        @class([ 'min-h-full text-gray-400 hover:text-gray-900 transition-all' , 'text-gray-700'=> request()->segment(1) === $link['match']
+                        ])>
+                        {{ $link['label'] }}
+                    </a>
+                    @endforeach
                 </nav>
+
                 <div class="menu">
                     <input type="text" placeholder="Search" class="h-9 bg-gray-100 rounded-xs px-4 py-2 w-48 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
