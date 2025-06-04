@@ -15,6 +15,7 @@ class Compte extends Component
 
     public $num_update;
     public $updating;
+    public $label_numero_compte = "code";
 
     public $isEdit;
 
@@ -62,7 +63,11 @@ class Compte extends Component
         ]);
         $verif = Compta_comptes::where('numero_compte', $this->new_numero_compte)->first();
         if (!empty($verif)) {
-            session()->flash('error', 'Compte avec ce code existe deja.');
+            session()->flash('error', "Compte '".$verif['numero_compte'].":".$verif['intitule']."' existe deja.");
+            return;
+        }
+        if ($this->new_classe != $this->new_numero_compte[0]) {
+            session()->flash('error', "$this->label_numero_compte ".$this->new_numero_compte." ne concient pas au classe ". $this->new_classe);
             return;
         }
         $new_compte = new Compta_comptes();
@@ -96,7 +101,11 @@ class Compte extends Component
             ->where('id', '!=', $this->num_update)
             ->first();
         if (!empty($verif)) {
-            session()->flash('error', 'Compte avec ce code existe deja.');
+            session()->flash('error', "Compte '".$verif['numero_compte'].": ".$verif['intitule']."' existe deja.");
+            return;
+        }
+        if ($this->update_classe != $this->update_numero_compte[0]) {
+            session()->flash('error', "$this->label_numero_compte ".$this->update_numero_compte." ne concient pas au classe ". $this->update_classe);
             return;
         }
         $new_compte = Compta_comptes::find($this->num_update);

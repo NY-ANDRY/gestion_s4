@@ -1,11 +1,11 @@
 <div class="flex-1 flex flex-col justify-center items-center">
     <div class="w-[90%] flex flex-col">
 
-    @if (session()->has('error'))
-    <div class="py-2 text-xl text-red-500">
-        {{ session('error') }}
-    </div>
-    @endif
+        @if (session()->has('error'))
+        <div class="py-2 text-xl text-red-500">
+            {{ session('error') }}
+        </div>
+        @endif
         @if ($isEdit)
         <div class="flex flex-col w-full h-auto gap-0 pt-2 pb-4">
             <div class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
@@ -18,7 +18,7 @@
 
                 <div class="w-32 pr-8">
                     <input
-                        type="number" placeholder="code"
+                        type="number" placeholder="{{ $label_numero_compte }}"
                         class="w-full border-b-1 border-gray-400 @error('new_numero_compte') border-red-500 border-b-3 @enderror"
                         wire:model="new_numero_compte">
                 </div>
@@ -50,7 +50,7 @@
 
         <div class="px-4 flex w-full h-12 items-center transition-all font-[is-m] border-b-1 border-gray-300 text-neutral-400">
             <div class="w-24">classe</div>
-            <div class="w-32">code</div>
+            <div class="w-32">{{ $label_numero_compte }}</div>
             <div class="flex-1">intitule</div>
             <div class="w-16 flex justify-center">action</div>
         </div>
