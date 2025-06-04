@@ -1,5 +1,53 @@
 <div class="flex-1 flex flex-col justify-center items-center">
     <div class="w-[90%] flex flex-col">
+
+    @if (session()->has('error'))
+    <div class="py-2 text-xl text-red-500">
+        {{ session('error') }}
+    </div>
+    @endif
+        @if ($isEdit)
+        <div class="flex flex-col w-full h-auto gap-0 pt-2 pb-4">
+            <div class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
+                <div class="w-24 pr-8">
+                    <input
+                        type="number" placeholder="classe"
+                        class="w-full border-b-1 border-gray-400 @error('new_classe') border-red-500 border-b-3 @enderror"
+                        wire:model="new_classe">
+                </div>
+
+                <div class="w-32 pr-8">
+                    <input
+                        type="number" placeholder="code"
+                        class="w-full border-b-1 border-gray-400 @error('new_numero_compte') border-red-500 border-b-3 @enderror"
+                        wire:model="new_numero_compte">
+                </div>
+
+                <div class="flex-1 pr-8">
+                    <input
+                        type="text" placeholder="intitule"
+                        class="w-full border-b-1 border-gray-400 @error('new_intitule') border-red-500 border-b-3 @enderror"
+                        wire:model="new_intitule">
+                </div>
+
+                <div class="w-auto flex justify-center gap-1">
+                    <button class="h-8 text-white rounded-sm px-2" wire:click="swapEdit">
+                        <img src="/assets/svg/close.svg" alt="">
+                    </button>
+                    <button class="h-8 bg-neutral-800 text-white rounded-sm px-2" wire:click="save">
+                        <img src="/assets/svg/check.svg" alt="">
+                    </button>
+                </div>
+            </div>
+        </div>
+        @else
+        <div class="flex flex-col flex-row-reverse w-full h-auto gap-0 px-4 pt-2 pb-4">
+            <button type="button" wire:click="swapEdit" class="flex items-center gap-2 text-blue-800 relative">
+                <span>ajouter une ligne</span> <img src="/assets/svg/add.svg" alt="" class="relative top-[1px]">
+            </button>
+        </div>
+        @endif
+
         <div class="px-4 flex w-full h-12 items-center transition-all font-[is-m] border-b-1 border-gray-300 text-neutral-400">
             <div class="w-24">classe</div>
             <div class="w-32">code</div>
@@ -33,9 +81,12 @@
                         wire:model="update_intitule">
                 </div>
 
-                <div class="w-16 flex justify-center gap-1">
-                    <button class="h-8 bg-blue-600 text-white rounded-sm px-4" wire:click="updateOne">
-                        update
+                <div class="w-auto flex justify-center gap-1">
+                    <button class="h-8 text-white rounded-sm px-1" wire:click="updateClose">
+                        <img src="/assets/svg/close.svg" alt="">
+                    </button>
+                    <button class="h-8 bg-neutral-800 text-white rounded-sm px-1" wire:click="updateOne">
+                        <img src="/assets/svg/check.svg" alt="">
                     </button>
                 </div>
             </div>
@@ -60,40 +111,5 @@
 
             @endforeach
         </div>
-        <div class="flex flex-col w-full h-auto gap-0 pt-2 pb-4">
-            <div class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
-                <div class="w-24 pr-8">
-                    <input
-                        type="number"
-                        class="w-full border-b-1 border-gray-400 @error('new_classe') border-red-500 border-b-3 @enderror"
-                        wire:model="new_classe">
-                </div>
-
-                <div class="w-32 pr-8">
-                    <input
-                        type="number"
-                        class="w-full border-b-1 border-gray-400 @error('new_numero_compte') border-red-500 border-b-3 @enderror"
-                        wire:model="new_numero_compte">
-                </div>
-
-                <div class="flex-1 pr-8">
-                    <input
-                        type="text"
-                        class="w-full border-b-1 border-gray-400 @error('new_intitule') border-red-500 border-b-3 @enderror"
-                        wire:model="new_intitule">
-                </div>
-
-                <div class="w-16 flex justify-center gap-1">
-                    <button class="h-8 bg-blue-600 text-white rounded-sm px-4" wire:click="save">
-                        save
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
-    @if (session()->has('error'))
-    <div class="py-2 text-xl text-red-500">
-        {{ session('error') }}
-    </div>
-    @endif
 </div>

@@ -10,6 +10,9 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+div * {
+  transition: all 70ms ease-out;
+}
 body {
     background-color: #fdfdfc;
 }

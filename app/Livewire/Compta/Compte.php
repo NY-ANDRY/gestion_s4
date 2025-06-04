@@ -16,6 +16,8 @@ class Compte extends Component
     public $num_update;
     public $updating;
 
+    public $isEdit;
+
     #[Validate('required|max:4')]
     public $new_numero_compte = '';
     #[Validate('required')]
@@ -60,7 +62,7 @@ class Compte extends Component
         ]);
         $verif = Compta_comptes::where('numero_compte', $this->new_numero_compte)->first();
         if (!empty($verif)) {
-            session()->flash('error', 'Compte with this number already exists.');
+            session()->flash('error', 'Compte avec ce code existe deja.');
             return;
         }
         $new_compte = new Compta_comptes();
@@ -94,7 +96,7 @@ class Compte extends Component
             ->where('id', '!=', $this->num_update)
             ->first();
         if (!empty($verif)) {
-            session()->flash('error', 'Compte with this number already exists.');
+            session()->flash('error', 'Compte avec ce code existe deja.');
             return;
         }
         $new_compte = Compta_comptes::find($this->num_update);
@@ -109,5 +111,13 @@ class Compte extends Component
         }
         $this->updating = false;
         $this->updateTable1();
+    }
+
+    public function updateClose(){
+        $this->updating = false;
+        $this->reset(['update_numero_compte', 'update_intitule', 'update_classe']);
+    }
+    public function swapEdit(){
+        $this->isEdit = !$this->isEdit;
     }
 }
