@@ -41,7 +41,11 @@
             </div>
         </div>
         @else
-        <div class="flex flex-col flex-row-reverse w-full h-auto gap-0 px-4 pt-2 pb-4">
+        <div class="flex flex-row justify-between w-full h-auto gap-0 px-4 pt-2 pb-4 relative">
+            <div class="flex gap-4 relative">
+                <img src="/assets/svg/search.svg" alt="">
+                <input type="text" class="text-md" placeholder="recherche">
+            </div>
             <button type="button" wire:click="swapEdit" class="flex items-center gap-2 text-blue-800 relative">
                 <span>ajouter une ligne</span> <img src="/assets/svg/add.svg" alt="" class="relative top-[1px]">
             </button>
