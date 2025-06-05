@@ -12,20 +12,17 @@ class Compte extends Component
 {
 
     public $comptes;
-
     public $num_update;
     public $updating;
     public $label_numero_compte = "code";
 
     public $isEdit;
 
-    #[Validate('required|max:4')]
     public $new_numero_compte = '';
-    #[Validate('required')]
     public $new_intitule = '';
-    #[Validate('required|max:1')]
     public $new_classe = '';
 
+    public $search_value;
 
     public $update_numero_compte = '';
     public $update_intitule = '';
@@ -61,13 +58,13 @@ class Compte extends Component
             'new_intitule' => 'required',
             'new_classe' => 'required|max:1',
         ]);
-        $verif = Compta_comptes::where('numero_compte', $this->new_numero_compte)->first();
-        if (!empty($verif)) {
-            session()->flash('error', "Compte '".$verif['numero_compte'].":".$verif['intitule']."' existe deja.");
+        $exist = Compta_comptes::where('numero_compte', $this->new_numero_compte)->first();
+        if (!empty($exist)) {
+            session()->flash('error', "Compte '" . $exist['numero_compte'] . ":" . $exist['intitule'] . "' existe deja.");
             return;
         }
         if ($this->new_classe != $this->new_numero_compte[0]) {
-            session()->flash('error', "$this->label_numero_compte ".$this->new_numero_compte." ne concient pas au classe ". $this->new_classe);
+            session()->flash('error', "$this->label_numero_compte " . $this->new_numero_compte . " ne convient pas au classe " . $this->new_classe);
             return;
         }
         $new_compte = new Compta_comptes();
@@ -97,15 +94,15 @@ class Compte extends Component
             'update_intitule' => 'required',
             'update_classe' => 'required|max:1',
         ]);
-        $verif = Compta_comptes::where('numero_compte', $this->update_numero_compte)
+        $exist = Compta_comptes::where('numero_compte', $this->update_numero_compte)
             ->where('id', '!=', $this->num_update)
             ->first();
-        if (!empty($verif)) {
-            session()->flash('error', "Compte '".$verif['numero_compte'].": ".$verif['intitule']."' existe deja.");
+        if (!empty($exist)) {
+            session()->flash('error', "Compte '" . $exist['numero_compte'] . ": " . $exist['intitule'] . "' existe deja.");
             return;
         }
         if ($this->update_classe != $this->update_numero_compte[0]) {
-            session()->flash('error', "$this->label_numero_compte ".$this->update_numero_compte." ne concient pas au classe ". $this->update_classe);
+            session()->flash('error', "$this->label_numero_compte " . $this->update_numero_compte . " ne convient pas au classe " . $this->update_classe);
             return;
         }
         $new_compte = Compta_comptes::find($this->num_update);
@@ -122,11 +119,31 @@ class Compte extends Component
         $this->updateTable1();
     }
 
-    public function updateClose(){
+    public function updateClose()
+    {
         $this->updating = false;
         $this->reset(['update_numero_compte', 'update_intitule', 'update_classe']);
     }
-    public function swapEdit(){
+    public function swapEdit()
+    {
         $this->isEdit = !$this->isEdit;
+    }
+
+    public function doFilter()
+    {
+        $value = $this->search_value;
+
+        if (!empty($value)) {
+            $this->comptes = Compta_comptes::where(function ($query) use ($value) {
+                $query->where('classe', 'like', '%' . $value . '%')
+                    ->orWhere('numero_compte', 'like', '%' . $value . '%')
+                    ->orWhere('intitule', 'like', '%' . $value . '%');
+            })
+                ->orderBy('classe')
+                ->orderBy('numero_compte')
+                ->get();
+        } else {
+            $this->updateTable1();
+        }
     }
 }

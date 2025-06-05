@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('libelle_ligne', 255)->nullable();
             $table->decimal('debit', 15, 2)->default(0);
             $table->decimal('credit', 15, 2)->default(0);
-            $table->foreign('id_ecriture')->references('id_ecriture')->on('compta_ecritures')->onDelete('cascade');
+            $table->foreign('id_ecriture')->references('id')->on('compta_ecritures')->onDelete('cascade');
             $table->foreign('numero_compte')->references('numero_compte')->on('compta_comptes');
         });
     }

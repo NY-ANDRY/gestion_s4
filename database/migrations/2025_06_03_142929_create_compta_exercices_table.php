@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('compta_exercices', function (Blueprint $table) {
-            $table->id('id_exercice');
+            $table->id('id');
             $table->date('date_debut');
             $table->date('date_fin');
             $table->timestamps();

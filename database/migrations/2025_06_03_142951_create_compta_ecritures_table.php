@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('compta_ecritures', function (Blueprint $table) {
-            $table->id('id_ecriture');
+            $table->id('id');
             $table->date('date_ecriture');
             $table->string('piece_reference', 50)->nullable();
             $table->string('libelle_ecriture', 255)->nullable();
@@ -17,7 +17,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreign('journal_code')->references('code_journal')->on('compta_journaux');
             $table->unsignedBigInteger('id_exercice')->nullable();
-            $table->foreign('id_exercice')->references('id_exercice')->on('compta_exercices');
+            $table->foreign('id_exercice')->references('id')->on('compta_exercices');
         });
     }
 

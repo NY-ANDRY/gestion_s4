@@ -41,12 +41,12 @@
             </div>
         </div>
         @else
-        <div class="flex flex-row justify-between w-full h-auto gap-0 px-4 pt-2 pb-4 relative">
-            <div class="flex gap-4 relative">
-                <img src="/assets/svg/search.svg" alt="">
-                <input type="text" class="text-md" placeholder="recherche">
+        <div class="flex flex-row justify-between w-full h-auto gap-4 px-4 pt-2 pb-4 relative">
+            <div class="flex gap-4 flex-1 relative">
+                <img src="/assets/svg/search.svg" height="24px" width="24px" alt="">
+                <input type="text" class="w-full text-md" placeholder="recherche" wire:model="search_value" wire:input="doFilter">
             </div>
-            <button type="button" wire:click="swapEdit" class="flex items-center gap-2 text-blue-800 relative">
+            <button type="button" wire:click="swapEdit" class="flex items-center gap-2 pl-4 pr-3 py-1 rounded-sm text-blue-800 hover:bg-blue-50 relative">
                 <span>ajouter une ligne</span> <img src="/assets/svg/add.svg" alt="" class="relative top-[1px]">
             </button>
         </div>
@@ -56,9 +56,11 @@
             <div class="w-24">classe</div>
             <div class="w-32">{{ $label_numero_compte }}</div>
             <div class="flex-1">intitule</div>
-            <div class="w-16 flex justify-center">action</div>
+            <div class="w-16 flex justify-center"></div>
         </div>
         <div class="flex flex-col w-full h-auto gap-0 pt-2 pb-4">
+            @if (!empty($comptes))
+
             @foreach ($comptes as $key => $compte)
 
             @if ($updating && $compte->id === $num_update)
@@ -102,7 +104,7 @@
                 <div class="w-32">{{ $compte->numero_compte }}</div>
                 <div class="flex-1">{{ $compte->intitule }}</div>
                 <div class="w-16 flex justify-center gap-1">
-                    <button class="transition-all hover:bg-neutral-300 rounded-sm p-1" wire:click="delete({{ $compte->id }})">
+                    <button class="transition-all hover:bg-neutral-300 rounded-sm p-1" wire:click="delete({{ $compte->id }})" wire:confirm="Are you sure you want to delete this ligne?">
                         <img src="/assets/svg/delete.svg" alt="">
                     </button>
                     <button class="transition-all hover:bg-neutral-300 rounded-sm p-1" wire:click="edit({{ $compte->id }})">
@@ -114,6 +116,7 @@
             @endif
 
             @endforeach
+            @endif
         </div>
     </div>
 </div>
