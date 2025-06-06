@@ -4,13 +4,18 @@ namespace App\Livewire\Compta;
 
 use Livewire\Component;
 use App\Models\Compta\Compta_ecritures;
+use App\Models\Compta\Compta_exercices;
+use App\Models\Compta\Compta_journaux;
 use Livewire\Attributes\Layout;
+use Carbon\Carbon;
 
 #[Layout('components.layouts.compta')]
 class Ecritures extends Component
 {
 
-    public $exercices;
+    public $ecritures;
+    public $journaux;
+    public $exercice;
     public $num_update;
     public $updating;
 
@@ -20,23 +25,41 @@ class Ecritures extends Component
     public $new_libelle_ecriture = '';
     public $new_journal_code = '';
     public $new_id_exercice = '';
+    public $journaux_search = [];
 
     public $search_value;
 
-    public $update_piece_reference = '';
     public $update_libelle_ecriture = '';
     public $update_journal_code = '';
     public $update_id_exercice = '';
+    public $update_date_ecriture = '';
 
 
     public function mount()
     {
+        $this->journaux = Compta_journaux::all()->sortBy('code_journal');
+        $this->exercice = Compta_exercices::where('en_cours', true)->first();
         $this->updateTable1();
     }
 
     public function updateTable1()
     {
-        $this->exercices = Compta_ecritures::all()->sortByDesc('date_ecriture');
+        $data = Compta_ecritures::all()->sortByDesc('date_ecriture');
+        $this->ecritures = $this->convertData($data);
+    }
+
+    public function convertData($data)
+    {
+        Carbon::setLocale('fr');
+        return $data->map(
+            fn($ecritures) => [
+                'id' => $ecritures->id,
+                'date_ecriture' => Carbon::parse($ecritures->date_ecriture)->translatedFormat('j F Y'),
+                'libelle_ecriture' => $ecritures->libelle_ecriture,
+                'journal_code' => $ecritures->journal_code,
+                'id_exercice' => $ecritures->id_exercice
+            ]
+        );
     }
 
     public function delete($id)
@@ -59,12 +82,12 @@ class Ecritures extends Component
             'new_id_exercice' => 'required',
         ]);
         $new_compte = new Compta_ecritures();
-        $new_compte->numero_compte = $this->new_numero_compte;
+        $new_compte->id_exercice = $this->exercice->id_exercice;
         $new_compte->libelle_ecriture = $this->new_libelle_ecriture;
         $new_compte->journal_code = $this->new_journal_code;
         $new_compte->save();
         session()->flash('status', 'Compte successfully created.');
-        $this->reset(['new_numero_compte', 'new_libelle_ecriture', 'new_journal_code']);
+        $this->reset(['new_libelle_ecriture', 'new_journal_code']);
         $this->updateTable1();
     }
 
@@ -72,26 +95,23 @@ class Ecritures extends Component
     {
         $this->updating = true;
         $this->num_update = $id;
-        $cur_compte = Compta_ecritures::find($id);
-        $this->update_libelle_ecriture = $cur_compte->libelle_ecriture;
-        $this->update_journal_code = $cur_compte->journal_code;
+        $cur_ecriture = Compta_ecritures::find($id);
+        $this->update_libelle_ecriture = $cur_ecriture->libelle_ecriture;
+        $this->update_journal_code = $cur_ecriture->journal_code;
+        $this->update_date_ecriture = $cur_ecriture->date_ecriture;
     }
 
     public function updateOne()
     {
         $this->validate([
             'update_libelle_ecriture' => 'required',
-            'update_journal_code' => 'required',
-            'update_id_exercice' => 'required',
+            'update_journal_code' => 'required'
         ]);
-        $exist = Compta_ecritures::where('numero_compte', $this->update_numero_compte)
-            ->where('id', '!=', $this->num_update)
-            ->first();
         $new_compte = Compta_ecritures::find($this->num_update);
         if (!empty($new_compte)) {
-            $new_compte->numero_compte = $this->update_numero_compte;
-            $new_compte->libelle_ecriture = $this->update_libelle_ecriture;
+            $new_compte->date_ecriture = $this->update_date_ecriture;
             $new_compte->journal_code = $this->update_journal_code;
+            $new_compte->libelle_ecriture = $this->update_libelle_ecriture;
             $new_compte->save();
             session()->flash('status', 'Compte successfully updated.');
         } else {
@@ -104,11 +124,12 @@ class Ecritures extends Component
     public function updateClose()
     {
         $this->updating = false;
-        $this->reset(['update_numero_compte', 'update_libelle_ecriture', 'update_journal_code']);
+        $this->reset(['update_journal_code', 'update_libelle_ecriture', 'update_journal_code']);
     }
     public function swapEdit()
     {
         $this->isEdit = !$this->isEdit;
+        $this->new_id_exercice = $this->exercice->nom;
     }
 
     public function doFilter()
@@ -116,16 +137,37 @@ class Ecritures extends Component
         $value = $this->search_value;
 
         if (!empty($value)) {
-            $this->exercices = Compta_ecritures::where(function ($query) use ($value) {
-                $query->where('journal_code', 'like', '%' . $value . '%')
-                    ->orWhere('numero_compte', 'like', '%' . $value . '%')
+            $data = Compta_ecritures::where(function ($query) use ($value) {
+                $query->where('date_ecriture', 'like', '%' . $value . '%')
                     ->orWhere('libelle_ecriture', 'like', '%' . $value . '%');
             })
-                ->orderBy('journal_code')
-                ->orderBy('numero_compte')
+                ->orderByDesc('date_ecriture')
                 ->get();
+
+            $this->ecritures = $this->convertData($data);
         } else {
             $this->updateTable1();
         }
+    }
+
+    public function searchJournal()
+    {
+        if (empty($this->new_journal_code)) {
+            $this->journaux_search = [];
+        } else {
+            $result = [];
+
+            foreach ($this->journaux as $key => $journal) {
+                if (str_contains(strtolower($journal->code_journal),strtolower( $this->new_journal_code))) {
+                    $result[] = $journal;
+                }
+            }
+
+            $this->journaux_search = $result;
+        }
+    }
+    public function setNew_journal_code($nom) {
+        $this->new_journal_code = $nom;
+        $this->journaux_search = [];
     }
 }

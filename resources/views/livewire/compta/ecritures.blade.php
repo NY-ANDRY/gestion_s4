@@ -9,25 +9,36 @@
         @if ($isEdit)
         <div class="flex flex-col w-full h-auto gap-0 pt-2 pb-4">
             <div class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
-                <div class="w-24 pr-8">
+
+                <div class="w-48 pr-8 flex gap-2">
+                    <div class="pl-1 text-sm flex items-end  text-neutral-400">exercice</div>
                     <input
-                        type="number" placeholder="classe"
-                        class="w-full border-b-1 border-gray-400 @error('new_classe') border-red-500 border-b-3 @enderror"
-                        wire:model="new_classe">
+                        type="text" readonly placeholder="exercice"
+                        class="w-full border-b-1 border-gray-400 text-neutral-600 @error('new_numero_compte') border-red-500 border-b-3 @enderror"
+                        wire:model="new_id_exercice">
                 </div>
 
-                <div class="w-32 pr-8">
+                <div class="w-32 mr-8 flex flex-col relative">
                     <input
-                        type="number" placeholder="{{ $label_numero_compte }}"
+                        type="text" placeholder="journal"
                         class="w-full border-b-1 border-gray-400 @error('new_numero_compte') border-red-500 border-b-3 @enderror"
-                        wire:model="new_numero_compte">
+                        wire:model="new_journal_code" wire:input="searchJournal">
+                    @if (!empty($journaux_search))
+
+                    <div class="absolute flex flex-col min-w-full rounded-b-sm rounded-tr-sm mr-8 pb-3 pt-2  pl-px top-full left-0 z-10 font-[is-m] bg-slate-600 text-white">
+                        @foreach ($journaux_search as $journal)
+                        <button class="flex pl-1 pr-3 py-1 whitespace-nowrap hover:bg-black" wire:click="setNew_journal_code('{{ $journal->code_journal }}')">{{ $journal->code_journal }} - {{$journal->libelle}}</button>
+                        @endforeach
+                    </div>
+
+                    @endif
                 </div>
 
                 <div class="flex-1 pr-8">
                     <input
-                        type="text" placeholder="intitule"
-                        class="w-full border-b-1 border-gray-400 @error('new_intitule') border-red-500 border-b-3 @enderror"
-                        wire:model="new_intitule">
+                        type="text" placeholder="libelle"
+                        class="w-full border-b-1 border-gray-400 @error('new_libelle_ecriture') border-red-500 border-b-3 @enderror"
+                        wire:model="new_libelle_ecriture">
                 </div>
 
                 <div class="w-auto flex justify-center gap-1">
@@ -59,32 +70,32 @@
             <div class="w-16 flex justify-center"></div>
         </div>
         <div class="flex flex-col w-full h-auto gap-0 pt-2 pb-4">
-            @if (!empty($exercices))
+            @if (!empty($ecritures))
 
-            @foreach ($exercices as $key => $exercice)
+            @foreach ($ecritures as $key => $ecriture)
 
-            @if ($updating && $exercice->id === $num_update)
+            @if ($updating && $ecriture['id'] === $num_update)
 
             <div class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
                 <div class="w-36 pr-8">
                     <input
-                        type="number"
-                        class="w-full border-b-1 border-gray-400 @error('update_classe') border-red-500 border-b-3 @enderror"
-                        wire:model="update_classe">
+                        type="date"
+                        class="w-full border-b-1 border-gray-400 @error('update_date_ecriture') border-red-500 border-b-3 @enderror"
+                        wire:model="update_date_ecriture">
                 </div>
 
                 <div class="w-24 pr-8">
                     <input
-                        type="number"
-                        class="w-full border-b-1 border-gray-400 @error('update_numero_compte') border-red-500 border-b-3 @enderror"
-                        wire:model="update_numero_compte">
+                        type="text"
+                        class="w-full border-b-1 border-gray-400 @error('update_journal_code') border-red-500 border-b-3 @enderror"
+                        wire:model="update_journal_code">
                 </div>
 
                 <div class="flex-1 pr-8">
                     <input
                         type="text"
-                        class="w-full border-b-1 border-gray-400 @error('update_intitule') border-red-500 border-b-3 @enderror"
-                        wire:model="update_intitule">
+                        class="w-full border-b-1 border-gray-400 @error('update_libelle_ecriture') border-red-500 border-b-3 @enderror"
+                        wire:model="update_libelle_ecriture">
                 </div>
 
                 <div class="w-auto flex justify-center gap-1">
@@ -100,14 +111,14 @@
             @else
 
             <div wire:key="{{ $key }}" class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
-                <div class="w-36">{{ $exercice->date_ecriture }}</div>
-                <div class="w-24">{{ $exercice->journal_code }}</div>
-                <div class="flex-1">{{ $exercice->libelle_ecriture }}</div>
+                <div class="w-36">{{ $ecriture['date_ecriture'] }}</div>
+                <div class="w-24">{{ $ecriture['journal_code'] }}</div>
+                <div class="flex-1">{{ $ecriture['libelle_ecriture'] }}</div>
                 <div class="w-16 flex justify-center gap-1">
-                    <button class="transition-all hover:bg-neutral-300 rounded-sm p-1" wire:click="delete({{ $exercice->id }})" wire:confirm="Are you sure you want to delete this ligne?">
+                    <button class="transition-all hover:bg-neutral-300 rounded-sm p-1" wire:click="delete({{ $ecriture['id'] }})" wire:confirm="Are you sure you want to delete this ligne?">
                         <img src="/assets/svg/delete.svg" alt="">
                     </button>
-                    <button class="transition-all hover:bg-neutral-300 rounded-sm p-1" wire:click="edit({{ $exercice->id }})">
+                    <button class="transition-all hover:bg-neutral-300 rounded-sm p-1" wire:click="edit({{ $ecriture['id'] }})">
                         <img src="/assets/svg/edit.svg" alt="">
                     </button>
                 </div>

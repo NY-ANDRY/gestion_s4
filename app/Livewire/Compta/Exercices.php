@@ -17,11 +17,13 @@ class Exercices extends Component
 
     public $isEdit;
 
+    public $new_nom = '';
     public $new_date_debut = '';
     public $new_date_fin = '';
 
     public $search_value;
 
+    public $update_nom = '';
     public $update_date_debut = '';
     public $update_date_fin = '';
 
@@ -33,21 +35,24 @@ class Exercices extends Component
 
     public function updateTable1()
     {
-        $datas = Compta_exercices::all()->sortByDesc('date_debut');
-        Carbon::setLocale('fr');
+        $data = Compta_exercices::all()->sortByDesc('date_debut');
+        $this->exercices = $this->convertData($data);
+    }
 
-        $exercices = $datas->map(function ($exercice) {
-            return [
+    public function convertData($data)
+    {
+        Carbon::setLocale('fr');
+        return $data->map(
+            fn($exercice) => [
                 'id' => $exercice->id,
+                'nom' => $exercice->nom,
                 'date_debut' => $exercice->date_debut,
                 'date_fin' => $exercice->date_fin,
                 'en_cours' => $exercice->en_cours,
                 'date_debut_fr' => Carbon::parse($exercice->date_debut)->translatedFormat('j F Y'),
                 'date_fin_fr' => Carbon::parse($exercice->date_fin)->translatedFormat('j F Y'),
-            ];
-        });
-
-        $this->exercices = $exercices;
+            ]
+        );
     }
 
     public function delete($id)
@@ -65,6 +70,7 @@ class Exercices extends Component
     public function save()
     {
         $this->validate([
+            'new_nom' => ['required'],
             'new_date_debut' => ['required', 'date', 'before:new_date_fin'],
             'new_date_fin'   => ['required', 'date', 'after:new_date_debut'],
         ]);
@@ -78,6 +84,7 @@ class Exercices extends Component
             return;
         }
         $new_compte = new Compta_exercices();
+        $new_compte->nom = $this->new_nom;
         $new_compte->date_debut = $this->new_date_debut;
         $new_compte->date_fin = $this->new_date_fin;
         $new_compte->save();
@@ -91,6 +98,7 @@ class Exercices extends Component
         $this->updating = true;
         $this->num_update = $id;
         $cur_compte = Compta_exercices::find($id);
+        $this->update_nom = $cur_compte->nom;
         $this->update_date_debut = $cur_compte->date_debut;
         $this->update_date_fin = $cur_compte->date_fin;
     }
@@ -98,19 +106,23 @@ class Exercices extends Component
     public function updateOne()
     {
         $this->validate([
+            'update_nom' => ['required'],
             'update_date_debut' => ['required', 'date', 'before:update_date_fin'],
             'update_date_fin' => ['required', 'date', 'after:update_date_debut']
         ]);
         $exist = Compta_exercices::where(function ($query) {
             $query->where('date_debut', '<=', $this->update_date_fin)
                 ->where('date_fin', '>=', $this->update_date_debut);
-        })->first();
+        })
+            ->where('id', '!=', $this->num_update)
+            ->first();
         if (!empty($exist)) {
             session()->flash('error', "'" . $exist['date_debut'] . " - " . $exist['date_fin'] . "' existe deja.");
             return;
         }
         $new_compte = Compta_exercices::find($this->num_update);
         if (!empty($new_compte)) {
+            $new_compte->nom = $this->update_nom;
             $new_compte->date_debut = $this->update_date_debut;
             $new_compte->date_fin = $this->update_date_fin;
             $new_compte->save();
@@ -137,12 +149,14 @@ class Exercices extends Component
         $value = $this->search_value;
 
         if (!empty($value)) {
-            $this->exercices = Compta_exercices::where(function ($query) use ($value) {
-                $query->where('date_debut', 'like', '%' . $value . '%')
-                    ->orWhere('date_fin', 'like', '%' . $value . '%');
+            $data = Compta_exercices::where(function ($query) use ($value) {
+                $query->where('nom', 'like', '%' . $value . '%')
+                    ->orWhere('date_fin', 'like', '%' . $value . '%')
+                    ->orWhere('date_debut', 'like', '%' . $value . '%');
             })
                 ->orderBy('date_debut')
                 ->get();
+            $this->exercices = $this->convertData($data);
         } else {
             $this->updateTable1();
         }

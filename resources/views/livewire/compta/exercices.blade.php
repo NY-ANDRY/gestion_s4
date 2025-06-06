@@ -1,5 +1,5 @@
 <div class="flex-1 flex items-center">
-    <div class="w-[450px] flex flex-col">
+    <div class="w-[620px] flex flex-col">
 
         @if (session()->has('error'))
         <div class="py-2 text-xl text-red-500">
@@ -9,16 +9,23 @@
         @if ($isEdit)
         <div class="flex flex-col w-full h-auto gap-0 pt-2 pb-4">
             <div class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
+                <div class="w-28 pr-8">
+                    <input
+                        type="text" placeholder="nom"
+                        class="w-full border-b-1 border-gray-400 @error('new_nom') border-red-500 border-b-3 @enderror"
+                        wire:model="new_nom">
+                </div>
+
                 <div class="w-40 pr-8">
                     <input
-                        type="date" placeholder="code exercice"
+                        type="date" placeholder="date debut"
                         class="w-full border-b-1 border-gray-400 @error('new_date_debut') border-red-500 border-b-3 @enderror"
                         wire:model="new_date_debut">
                 </div>
 
                 <div class="w-40 pr-8">
                     <input
-                        type="date" placeholder="date_fin"
+                        type="date" placeholder="date fin"
                         class="w-full border-b-1 border-gray-400 @error('new_date_fin') border-red-500 border-b-3 @enderror"
                         wire:model="new_date_fin">
                 </div>
@@ -50,6 +57,7 @@
         @endif
 
         <div class="px-4 flex h-12 items-center transition-all font-[is-m] border-b-1 border-gray-300 text-neutral-400">
+            <div class="w-28">nom</div>
             <div class="w-40">debut</div>
             <div class="w-40">fin</div>
             <div class="flex-1 flex "></div>
@@ -62,6 +70,13 @@
             @if ($updating && $exercice['id'] === $num_update)
 
             <div class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
+                <div class="w-28 pr-8">
+                    <input
+                        type="text"
+                        class="w-full border-b-1 border-gray-400 @error('update_nom') border-red-500 border-b-3 @enderror"
+                        wire:model="update_nom">
+                </div>
+
                 <div class="w-40 pr-8">
                     <input
                         type="date"
@@ -91,6 +106,7 @@
             @else
 
             <div wire:key="{{ $key }}" class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
+                <div class="w-28">{{ $exercice['nom'] }}</div>
                 <div class="w-40">{{ $exercice['date_debut_fr'] }}</div>
                 <div class="w-40">{{ $exercice['date_fin_fr'] }}</div>
 
