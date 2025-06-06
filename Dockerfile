@@ -42,4 +42,4 @@ RUN echo '<VirtualHost *:80>\n\
 </VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
 # Lancer les migrations et Apache
-CMD php artisan migrate:fresh --force && apache2-foreground
+CMD php artisan migrate --force && apache2-foreground
