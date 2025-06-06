@@ -5,6 +5,7 @@ namespace App\Livewire\Compta;
 use App\Models\Compta\Compta_exercices;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Carbon\Carbon;
 
 #[Layout('components.layouts.compta')]
 class Exercices extends Component
@@ -32,9 +33,22 @@ class Exercices extends Component
 
     public function updateTable1()
     {
-        $this->exercices = Compta_exercices::all()->sortBy('date_debut');
-    }
+        $datas = Compta_exercices::all()->sortByDesc('date_debut');
+        Carbon::setLocale('fr');
 
+        $exercices = $datas->map(function ($exercice) {
+            return [
+                'id' => $exercice->id,
+                'date_debut' => $exercice->date_debut,
+                'date_fin' => $exercice->date_fin,
+                'en_cours' => $exercice->en_cours,
+                'date_debut_fr' => Carbon::parse($exercice->date_debut)->translatedFormat('j F Y'),
+                'date_fin_fr' => Carbon::parse($exercice->date_fin)->translatedFormat('j F Y'),
+            ];
+        });
+
+        $this->exercices = $exercices;
+    }
 
     public function delete($id)
     {
@@ -132,5 +146,20 @@ class Exercices extends Component
         } else {
             $this->updateTable1();
         }
+    }
+
+    public function setOn($id)
+    {
+        $cur = Compta_exercices::where('id', $id)->exists();
+        if ($cur) {
+            Compta_exercices::query()->update(['en_cours' => false]);
+            Compta_exercices::where('id', $id)->update(['en_cours' => true]);
+        }
+        $this->updateTable1();
+    }
+    public function setOff($id)
+    {
+        Compta_exercices::where('id', $id)->update(['en_cours' => false]);
+        $this->updateTable1();
     }
 }

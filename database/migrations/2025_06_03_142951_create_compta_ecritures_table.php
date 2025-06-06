@@ -14,9 +14,9 @@ return new class extends Migration
             $table->string('piece_reference', 50)->nullable();
             $table->string('libelle_ecriture', 255)->nullable();
             $table->string('journal_code', 5);
+            $table->unsignedBigInteger('id_exercice')->nullable();
             $table->timestamps();
             $table->foreign('journal_code')->references('code_journal')->on('compta_journaux');
-            $table->unsignedBigInteger('id_exercice')->nullable();
             $table->foreign('id_exercice')->references('id')->on('compta_exercices');
         });
     }

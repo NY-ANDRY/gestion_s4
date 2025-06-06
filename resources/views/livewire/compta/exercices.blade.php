@@ -59,7 +59,7 @@
 
             @foreach ($exercices as $key => $exercice)
 
-            @if ($updating && $exercice->id === $num_update)
+            @if ($updating && $exercice['id'] === $num_update)
 
             <div class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
                 <div class="w-40 pr-8">
@@ -87,30 +87,41 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        @else
+            @else
 
-        <div wire:key="{{ $key }}" class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
-            <div class="w-40">{{ $exercice->date_debut }}</div>
-            <div class="w-40">{{ $exercice->date_fin }}</div>
-            <div class="flex-1 flex flex-row-reverse gap-1">
-                <div class="flex flex-row">
-                    <button class="transition-all hover:bg-neutral-300 rounded-sm p-1" wire:click="delete({{ $exercice->id }})" wire:confirm="Are you sure you want to delete this ligne?">
-                        <img src="/assets/svg/delete.svg" alt="">
-                    </button>
-                    <button class="transition-all hover:bg-neutral-300 rounded-sm p-1" wire:click="edit({{ $exercice->id }})">
-                        <img src="/assets/svg/edit.svg" alt="">
-                    </button>
+            <div wire:key="{{ $key }}" class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
+                <div class="w-40">{{ $exercice['date_debut_fr'] }}</div>
+                <div class="w-40">{{ $exercice['date_fin_fr'] }}</div>
+
+                <div class="flex-1 flex flex-row-reverse gap-1">
+                    <div class="flex flex-row">
+                        <div class="h-full flex items-center pr-2">
+                            @if ($exercice['en_cours'])
+                            <button wire:click="setOff({{ $exercice['id'] }})">
+                                <img src="/assets/svg/toggle_on.svg" alt="">
+                            </button>
+                            @else
+                            <button wire:click="setOn({{ $exercice['id'] }})">
+                                <img src="/assets/svg/toggle_off.svg" alt="">
+                            </button>
+                            @endif
+                        </div>
+                        <button class="transition-all hover:bg-neutral-300 rounded-sm p-1" wire:click="delete({{ $exercice['id'] }})" wire:confirm="Are you sure you want to delete this ligne?">
+                            <img src="/assets/svg/delete.svg" alt="">
+                        </button>
+                        <button class="transition-all hover:bg-neutral-300 rounded-sm p-1" wire:click="edit({{ $exercice['id'] }})">
+                            <img src="/assets/svg/edit.svg" alt="">
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            @endif
+
+            @endforeach
+            @endif
         </div>
-
-        @endif
-
-        @endforeach
-        @endif
     </div>
-</div>
-<div class="flex flex-col"></div>
+    <div class="flex flex-col"></div>
 </div>
