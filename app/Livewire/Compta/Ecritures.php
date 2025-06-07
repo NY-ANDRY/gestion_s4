@@ -44,7 +44,8 @@ class Ecritures extends Component
 
     public function updateTable1()
     {
-        $data = Compta_ecritures::all()->sortByDesc('date_ecriture');
+        // $data = Compta_ecritures::all()->sortByDesc('date_ecriture');
+        $data = Compta_ecritures::where('id_exercice', $this->exercice->id)->orderByDesc('date_ecriture')->get();
         $this->ecritures = $this->convertData($data);
     }
 
@@ -78,11 +79,10 @@ class Ecritures extends Component
     {
         $this->validate([
             'new_libelle_ecriture' => 'required',
-            'new_journal_code' => 'required',
-            'new_id_exercice' => 'required',
+            'new_journal_code' => 'required'
         ]);
         Compta_ecritures::create([
-            'id_exercice' => $this->exercice->id_exercice,
+            'id_exercice' => $this->exercice->id,
             'libelle_ecriture' => $this->new_libelle_ecriture,
             'journal_code' => $this->new_journal_code
         ]);

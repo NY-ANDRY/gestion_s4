@@ -6,7 +6,8 @@
             ['label' => 'Compte', 'href' => '/compta', 'match' => null],
             ['label' => 'Journaux', 'href' => '/compta/journaux', 'match' => 'journaux'],
             ['label' => 'Exercices', 'href' => '/compta/exercices', 'match' => 'exercices'],
-            ['label' => 'Ecritures', 'href' => '/compta/ecritures', 'match' => 'ecritures']
+            ['label' => 'Ecritures', 'href' => '/compta/ecritures', 'match' => 'ecritures'],
+            ['label' => 'Grand livre', 'href' => '/compta/grandLivre', 'match' => 'grandLivre']
             ];
             @endphp
 

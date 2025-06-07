@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Compta\GrandLivre;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Home;
 use App\Livewire\Irsa\Irsa;
@@ -31,4 +32,5 @@ Route::prefix('compta')->group(function () {
     Route::get('/exercices', Exercices::class);
     Route::get('/ecritures', Ecritures::class);
     Route::get('/ecritures/{id}', LignesEcritures::class);
+    Route::get('/grandLivre', GrandLivre::class);
 });
