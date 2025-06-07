@@ -5,6 +5,7 @@ namespace App\Livewire\Compta;
 use App\Models\Compta\Compta_comptes;
 use App\Models\Compta\Compta_exercices;
 use App\Models\Compta\Compta_grandLivre;
+use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -30,7 +31,23 @@ class GrandLivre extends Component
             return;
         }
 
-        $this->id_exercice = $this->exercice->id;
+        $this->exercice = $this->formatExercice($this->exercice);
+        
+        $this->id_exercice = $this->exercice['id'];
         $this->total = Compta_grandLivre::getTotalSoldeAll($this->id_exercice);
+    }
+
+    public function formatExercice($exercice)
+    {
+        Carbon::setLocale('fr');
+        return [
+            'id' => $exercice->id,
+            'nom' => $exercice->nom,
+            'date_debut' => $exercice->date_debut,
+            'date_fin' => $exercice->date_fin,
+            'en_cours' => $exercice->en_cours,
+            'date_debut_fr' => Carbon::parse($exercice->date_debut)->translatedFormat('j F Y'),
+            'date_fin_fr' => Carbon::parse($exercice->date_fin)->translatedFormat('j F Y'),
+        ];
     }
 }

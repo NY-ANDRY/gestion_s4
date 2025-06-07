@@ -6,6 +6,22 @@
                 {{ session('error') }}
             </div>
             @endif
+
+            <div class="flex h-7 pb-10 font-[is-m] text-lg text-black">
+                <div class="w-48">Periode: </div>
+                <div class="flex-1 flex gap-2">
+                    <span>
+                        {{ !empty($exercice) ? $exercice['date_debut_fr'] : '' }}
+                    </span>
+                    <span class="px-2">
+                        ->
+                    </span>
+                    <span>
+                        {{ !empty($exercice) ? $exercice['date_fin_fr'] : '' }}
+                    </span>
+                </div>
+            </div>
+
             <div class="h-7 flex items-center text-neutral-500 capitalize font-[is-m]">
                 <div class="w-48">date</div>
                 <div class="flex-1">libelle</div>
