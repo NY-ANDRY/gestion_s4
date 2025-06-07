@@ -15,16 +15,22 @@ class GrandLivre extends Component
     public $creditResult = 0;
     public $id_exercice = 5, $exercice;
     public $comptes;
-
-    public $total;
+    public $total = [
+        'debit' => 0,
+        'credit' => 0
+    ];
 
     public function mount()
     {
-        $this->exercice = Compta_exercices::where('en_cours', true)->first();
-        $this->id_exercice = $this->exercice->id;
         $this->comptes = Compta_comptes::getAllOrdered();
+        $this->exercice = Compta_exercices::where('en_cours', true)->first();
 
+        if (empty($this->exercice)) {
+            session()->flash('error', 'exercice non defini');
+            return;
+        }
+
+        $this->id_exercice = $this->exercice->id;
         $this->total = Compta_grandLivre::getTotalSoldeAll($this->id_exercice);
     }
-
 }

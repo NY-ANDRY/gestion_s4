@@ -14,14 +14,25 @@ class Livre extends Component
     public $fin_exercice;
     public $compte;
     public $mouvements = [];
-    public $total;
-    public $solde;
+    public $total = [
+        'debit' => 0,
+        'credit' => 0
+    ];
+    public $solde = [
+        'debit' => 0,
+        'credit' => 0
+    ];
 
     public function mount($id_exercice, $numero_compte)
     {
         Carbon::setLocale('fr');
 
         $this->exercice = Compta_exercices::find($id_exercice);
+
+        if (empty($this->exercice)) {
+            session()->flash('error', 'exercice non defini');
+            return;
+        }
         $this->fin_exercice = Carbon::parse($this->exercice['date_fin'])->translatedFormat('j F Y');
         $this->compte = Compta_comptes::where('numero_compte', $numero_compte)->first();
 
@@ -44,5 +55,4 @@ class Livre extends Component
             'credit' => $e->credit
         ]);
     }
-
 }

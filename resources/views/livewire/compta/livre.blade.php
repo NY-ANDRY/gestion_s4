@@ -2,7 +2,7 @@
 
     <div class="flex items-center justify-center h-8 my-1 font-[is-m] rounded-sm uppercase tracking-wider bg-neutral-200">
         <span>
-            COMPTE {{ $compte['numero_compte'] }} {{ $compte['intitule'] }}
+            COMPTE {{ !empty($compte) ? $compte['numero_compte'] : '' }} {{ !empty($compte) ? $compte['intitule'] : '' }}
         </span>
     </div>
 

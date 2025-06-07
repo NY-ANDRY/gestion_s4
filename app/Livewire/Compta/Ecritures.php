@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Livewire\Compta;
 
 use Livewire\Component;
@@ -35,6 +36,12 @@ class Ecritures extends Component
     {
         $this->journaux = Compta_journaux::all()->sortBy('code_journal');
         $this->exercice = Compta_exercices::getCurrent();
+
+        if (empty($this->exercice)) {
+            session()->flash('error', 'exercice non defini');
+            return;
+        }
+
         $this->updateTable1();
     }
 
