@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Compta;
 
 use App\Models\Compta\Compta_journaux;
@@ -9,43 +8,35 @@ use Livewire\Attributes\Layout;
 #[Layout('components.layouts.compta')]
 class Journaux extends Component
 {
-
     public $journaux;
-    public $num_update;
-    public $updating;
+    public $num_update, $updating, $isEdit;
 
-    public $isEdit;
-
-    public $new_code_journal = '';
-    public $new_libelle = '';
-
+    public $new_code_journal = '', $new_libelle = '';
+    public $update_code_journal = '', $update_libelle = '';
     public $search_value;
-
-    public $update_code_journal = '';
-    public $update_libelle = '';
-
 
     public function mount()
     {
-        $this->updateTable1();
+        $this->loadJournaux();
     }
 
-    public function updateTable1()
+    public function loadJournaux()
     {
-        $this->journaux = Compta_journaux::all()->sortBy('code_journal');
+        $this->journaux = Compta_journaux::getAllOrdered();
     }
-
 
     public function delete($id)
     {
-        $compte = Compta_journaux::find($id);
-        if (!empty($compte)) {
-            $compte->delete();
-            session()->flash('status', 'Journal successfully deleted.');
+        $journal = Compta_journaux::find($id);
+
+        if ($journal) {
+            $journal->delete();
+            session()->flash('status', 'Journal supprimé.');
         } else {
-            session()->flash('error', 'Journal not found.');
+            session()->flash('error', 'Journal introuvable.');
         }
-        $this->updateTable1();
+
+        $this->loadJournaux();
     }
 
     public function save()
@@ -55,10 +46,8 @@ class Journaux extends Component
             'new_libelle' => 'required',
         ]);
 
-        $exists = Compta_journaux::where('code_journal', $this->new_code_journal)->first();
-
-        if ($exists) {
-            session()->flash('error', "'{$exists->code_journal}: {$exists->libelle}' existe déjà.");
+        if (Compta_journaux::existsWithCode($this->new_code_journal)) {
+            session()->flash('error', "Le journal '{$this->new_code_journal}' existe déjà.");
             return;
         }
 
@@ -67,20 +56,19 @@ class Journaux extends Component
             'libelle' => $this->new_libelle,
         ]);
 
-        session()->flash('status', 'Journal successfully created.');
-
+        session()->flash('status', 'Journal créé avec succès.');
         $this->reset(['new_code_journal', 'new_libelle']);
-        $this->updateTable1();
+        $this->loadJournaux();
     }
-
 
     public function edit($id)
     {
         $this->updating = true;
         $this->num_update = $id;
-        $cur_compte = Compta_journaux::find($id);
-        $this->update_code_journal = $cur_compte->code_journal;
-        $this->update_libelle = $cur_compte->libelle;
+
+        $journal = Compta_journaux::find($id);
+        $this->update_code_journal = $journal->code_journal;
+        $this->update_libelle = $journal->libelle;
     }
 
     public function updateOne()
@@ -90,17 +78,12 @@ class Journaux extends Component
             'update_libelle' => 'required',
         ]);
 
-        $exists = Compta_journaux::where('code_journal', $this->update_code_journal)
-            ->where('id', '!=', $this->num_update)
-            ->first();
-
-        if ($exists) {
-            session()->flash('error', "'{$exists->code_journal}: {$exists->libelle}' existe déjà.");
+        if (Compta_journaux::existsWithCode($this->update_code_journal, $this->num_update)) {
+            session()->flash('error', "Ce code journal existe déjà.");
             return;
         }
 
         $journal = Compta_journaux::find($this->num_update);
-
         if (!$journal) {
             session()->flash('error', 'Journal non trouvé.');
             return;
@@ -111,17 +94,17 @@ class Journaux extends Component
             'libelle' => $this->update_libelle,
         ]);
 
-        session()->flash('status', 'Journal mis à jour avec succès.');
+        session()->flash('status', 'Journal mis à jour.');
         $this->updating = false;
-        $this->updateTable1();
+        $this->loadJournaux();
     }
-
 
     public function updateClose()
     {
         $this->updating = false;
         $this->reset(['update_code_journal', 'update_libelle']);
     }
+
     public function swapEdit()
     {
         $this->isEdit = !$this->isEdit;
@@ -129,17 +112,10 @@ class Journaux extends Component
 
     public function doFilter()
     {
-        $value = $this->search_value;
-
-        if (!empty($value)) {
-            $this->journaux = Compta_journaux::where(function ($query) use ($value) {
-                $query->where('code_journal', 'like', '%' . $value . '%')
-                    ->orWhere('libelle', 'like', '%' . $value . '%');
-            })
-                ->orderBy('code_journal')
-                ->get();
+        if (!empty($this->search_value)) {
+            $this->journaux = Compta_journaux::search($this->search_value);
         } else {
-            $this->updateTable1();
+            $this->loadJournaux();
         }
     }
 }

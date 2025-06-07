@@ -21,18 +21,12 @@ class LignesEcritures extends Component
 
     public $isEdit;
 
-    public $new_numero_compte = null;
-    public $new_libelle_ligne = '';
-    public $new_type = '';
-    public $new_value = '';
+    public $new_numero_compte = null, $new_libelle_ligne = '', $new_type = '', $new_value = '';
 
     public $comptes_search = [];
     public $search_value;
 
-    public $update_numero_compte = null;
-    public $update_libelle_ligne = '';
-    public $update_type = '';
-    public $update_value = null;
+    public $update_numero_compte = null, $update_libelle_ligne = '', $update_type = '', $update_value = null;
 
 
     public function mount($id)
@@ -42,15 +36,13 @@ class LignesEcritures extends Component
         $this->comptes = Compta_comptes::all();
         $this->updateTable1();
     }
-
     public function updateTable1()
     {
-        $data = Compta_lignes_ecritures::where('id_ecriture', $this->id_ecriture)
-            ->orderBy('numero_compte')
-            ->get();
+        $data = Compta_lignes_ecritures::getByEcritureId($this->id_ecriture);
         $this->lignes_ecritures = $this->convertData($data);
         $this->dispatch('updateDetails');
     }
+
 
     public function convertData($data)
     {
@@ -162,15 +154,7 @@ class LignesEcritures extends Component
         $value = $this->search_value;
 
         if (!empty($value)) {
-            $data = Compta_lignes_ecritures::where(function ($query) use ($value) {
-                $query->where('numero_compte', 'like', '%' . $value . '%')
-                    ->orWhere('libelle_ligne', 'like', '%' . $value . '%')
-                    ->orWhere('debit', 'like', '%' . $value . '%')
-                    ->orWhere('credit', 'like', '%' . $value . '%');
-            })
-                ->orderBy('numero_compte')
-                ->get();
-
+            $data = Compta_lignes_ecritures::filterByValue($value);
             $this->lignes_ecritures = $this->convertData($data);
         } else {
             $this->updateTable1();
