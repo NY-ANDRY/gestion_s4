@@ -20,7 +20,6 @@
     </div>
     @endif
 
-
     @if (session()->has('error'))
     <div class="py-2 text-xl text-red-500">
         {{ session('error') }}

@@ -39,11 +39,11 @@
             <div class="flex items-center justify-between">
                 <div class="flex flex-col ">
                     <div class="flex text-neutral-600 text-lg">debit</div>
-                    <div class="flex text-neutral-900 text-2xl font-[is-m]">0000000000</div>
+                    <div class="flex text-neutral-900 text-2xl font-[is-m]">{{ $total_debit }}</div>
                 </div>
                 <div class="flex flex-col">
                     <div class="flex text-neutral-600 text-lg">credit</div>
-                    <div class="flex text-neutral-900 text-2xl font-[is-m]">0000000000</div>
+                    <div class="flex text-neutral-900 text-2xl font-[is-m]">{{ $total_credit }}</div>
                 </div>
             </div>
         </div>

@@ -12,7 +12,7 @@ use Livewire\Component;
 class LignesEcritures extends Component
 {
     public $id_ecriture;
-    public $show_ecriture_details = false;
+    public $show_ecriture_details = true;
 
     public $lignes_ecritures;
     public $comptes;
@@ -49,6 +49,7 @@ class LignesEcritures extends Component
             ->orderBy('numero_compte')
             ->get();
         $this->lignes_ecritures = $this->convertData($data);
+        $this->dispatch('updateDetails');
     }
 
     public function convertData($data)
