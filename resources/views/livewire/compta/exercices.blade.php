@@ -1,6 +1,5 @@
-<div class="flex-1 flex items-center">
+<div class="w-full flex">
     <div class="w-[620px] flex flex-col">
-
         @if (session()->has('error'))
         <div class="py-2 text-xl text-red-500">
             {{ session('error') }}
@@ -139,5 +138,8 @@
             @endif
         </div>
     </div>
-    <div class="flex flex-col"></div>
+
+    <div class="flex flex-col flex-1">
+        
+    </div>
 </div>

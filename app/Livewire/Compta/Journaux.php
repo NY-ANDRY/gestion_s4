@@ -52,21 +52,27 @@ class Journaux extends Component
     {
         $this->validate([
             'new_code_journal' => 'required',
-            'new_libelle' => 'required'
+            'new_libelle' => 'required',
         ]);
-        $exist = Compta_journaux::where('code_journal', $this->new_code_journal)->first();
-        if (!empty($exist)) {
-            session()->flash('error', "'" . $exist['code_journal'] . ":" . $exist['libelle'] . "' existe deja.");
+
+        $exists = Compta_journaux::where('code_journal', $this->new_code_journal)->first();
+
+        if ($exists) {
+            session()->flash('error', "'{$exists->code_journal}: {$exists->libelle}' existe déjà.");
             return;
         }
-        $new_compte = new Compta_journaux();
-        $new_compte->code_journal = $this->new_code_journal;
-        $new_compte->libelle = $this->new_libelle;
-        $new_compte->save();
+
+        Compta_journaux::create([
+            'code_journal' => $this->new_code_journal,
+            'libelle' => $this->new_libelle,
+        ]);
+
         session()->flash('status', 'Journal successfully created.');
+
         $this->reset(['new_code_journal', 'new_libelle']);
         $this->updateTable1();
     }
+
 
     public function edit($id)
     {
@@ -81,27 +87,35 @@ class Journaux extends Component
     {
         $this->validate([
             'update_code_journal' => 'required',
-            'update_libelle' => 'required'
+            'update_libelle' => 'required',
         ]);
-        $exist = Compta_journaux::where('code_journal', $this->update_code_journal)
+
+        $exists = Compta_journaux::where('code_journal', $this->update_code_journal)
             ->where('id', '!=', $this->num_update)
             ->first();
-        if (!empty($exist)) {
-            session()->flash('error', "'" . $exist['code_journal'] . ": " . $exist['libelle'] . "' existe deja.");
+
+        if ($exists) {
+            session()->flash('error', "'{$exists->code_journal}: {$exists->libelle}' existe déjà.");
             return;
         }
-        $new_compte = Compta_journaux::find($this->num_update);
-        if (!empty($new_compte)) {
-            $new_compte->code_journal = $this->update_code_journal;
-            $new_compte->libelle = $this->update_libelle;
-            $new_compte->save();
-            session()->flash('status', 'Journal successfully updated.');
-        } else {
-            session()->flash('error', 'Journal not found.');
+
+        $journal = Compta_journaux::find($this->num_update);
+
+        if (!$journal) {
+            session()->flash('error', 'Journal non trouvé.');
+            return;
         }
+
+        $journal->update([
+            'code_journal' => $this->update_code_journal,
+            'libelle' => $this->update_libelle,
+        ]);
+
+        session()->flash('status', 'Journal mis à jour avec succès.');
         $this->updating = false;
         $this->updateTable1();
     }
+
 
     public function updateClose()
     {

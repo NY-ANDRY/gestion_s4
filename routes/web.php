@@ -15,6 +15,7 @@ use App\Livewire\Compta\LignesEcritures;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+// Route::post('/exemple', [ExempleController::class, 'store']);
 
 Route::get('/', Home::class);
 Route::get('/irsa', Irsa::class);
@@ -29,5 +30,5 @@ Route::prefix('compta')->group(function () {
     Route::get('/journaux', Journaux::class);
     Route::get('/exercices', Exercices::class);
     Route::get('/ecritures', Ecritures::class);
-    Route::get('/lignes_ecritures', LignesEcritures::class);
+    Route::get('/ecritures/{id}', LignesEcritures::class);
 });

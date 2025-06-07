@@ -17,15 +17,13 @@ body {
     background-color: #fdfdfc;
 }
 
-th {
-  font-weight: normal;
-  text-align: left;
-  /* padding-left: 40px; */
+::-webkit-scrollbar {
+  @apply bg-none w-2.5;
 }
-td {
-  /* min-width: 240px; */
-  /* padding-left: 40px; */
+::-webkit-scrollbar-thumb {
+  @apply bg-neutral-400 rounded-xl;
 }
+
 button {
   cursor: pointer;
 }
@@ -42,6 +40,7 @@ input::selection {
 .active {
   @apply bg-gray-100 text-neutral-800;
 }
+
 @font-face {
   font-family: "is";
   src: url("../fonts/InstrumentSans-Regular.ttf") format("truetype");

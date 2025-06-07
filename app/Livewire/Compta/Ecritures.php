@@ -81,11 +81,11 @@ class Ecritures extends Component
             'new_journal_code' => 'required',
             'new_id_exercice' => 'required',
         ]);
-        $new_compte = new Compta_ecritures();
-        $new_compte->id_exercice = $this->exercice->id_exercice;
-        $new_compte->libelle_ecriture = $this->new_libelle_ecriture;
-        $new_compte->journal_code = $this->new_journal_code;
-        $new_compte->save();
+        Compta_ecritures::create([
+            'id_exercice' => $this->exercice->id_exercice,
+            'libelle_ecriture' => $this->new_libelle_ecriture,
+            'journal_code' => $this->new_journal_code
+        ]);
         session()->flash('status', 'Compte successfully created.');
         $this->reset(['new_libelle_ecriture', 'new_journal_code']);
         $this->updateTable1();
@@ -108,15 +108,17 @@ class Ecritures extends Component
             'update_journal_code' => 'required'
         ]);
         $new_compte = Compta_ecritures::find($this->num_update);
-        if (!empty($new_compte)) {
-            $new_compte->date_ecriture = $this->update_date_ecriture;
-            $new_compte->journal_code = $this->update_journal_code;
-            $new_compte->libelle_ecriture = $this->update_libelle_ecriture;
-            $new_compte->save();
+        if ($new_compte) {
+            $new_compte->update([
+                'date_ecriture' => $this->update_date_ecriture,
+                'journal_code' => $this->update_journal_code,
+                'libelle_ecriture' => $this->update_libelle_ecriture,
+            ]);
             session()->flash('status', 'Compte successfully updated.');
         } else {
             session()->flash('error', 'Compte not found.');
         }
+
         $this->updating = false;
         $this->updateTable1();
     }
@@ -158,7 +160,7 @@ class Ecritures extends Component
             $result = [];
 
             foreach ($this->journaux as $key => $journal) {
-                if (str_contains(strtolower($journal->code_journal),strtolower( $this->new_journal_code))) {
+                if (str_contains(strtolower($journal->code_journal), strtolower($this->new_journal_code))) {
                     $result[] = $journal;
                 }
             }
@@ -166,7 +168,8 @@ class Ecritures extends Component
             $this->journaux_search = $result;
         }
     }
-    public function setNew_journal_code($nom) {
+    public function setNew_journal_code($nom)
+    {
         $this->new_journal_code = $nom;
         $this->journaux_search = [];
     }

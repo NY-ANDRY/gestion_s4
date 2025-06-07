@@ -11,8 +11,8 @@
 
 <body>
     <div class="flex flex-col items-center h-screen">
-        <div class="container h-full border-l-gray-300 border-solid border-l-[1px]">
-            <header class="flex justify-between items-center p-8 pl-14">
+        <div class="container flex flex-col h-full border-l-gray-300 border-solid border-l-[1px]">
+            <header class="flex justify-between items-center p-8 pr-14 pl-14">
                 <nav class="flex items-center gap-8 text-gray-500 font-[is-m] capitalize">
 
                     <a href="/" wire:navigate class="text-2xl font-[is-b] mr-8 text-gray-900">
@@ -39,7 +39,9 @@
                     <input type="text" placeholder="Search" class="h-8 bg-gray-100 rounded-xs px-4 py-2 w-56 focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
             </header>
-            {{ $slot }}
+            <div class="flex flex-col flex-1 overflow-hidden overflow-y-auto">
+                {{ $slot }}
+            </div>
         </div>
     </div>
 </body>

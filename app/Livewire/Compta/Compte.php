@@ -58,24 +58,31 @@ class Compte extends Component
             'new_intitule' => 'required',
             'new_classe' => 'required|max:1',
         ]);
+
         $exist = Compta_comptes::where('numero_compte', $this->new_numero_compte)->first();
-        if (!empty($exist)) {
-            session()->flash('error', "Compte '" . $exist['numero_compte'] . ":" . $exist['intitule'] . "' existe deja.");
+
+        if ($exist) {
+            session()->flash('error', "Compte '{$exist->numero_compte}: {$exist->intitule}' existe déjà.");
             return;
         }
-        if ($this->new_classe != $this->new_numero_compte[0]) {
-            session()->flash('error', "$this->label_numero_compte " . $this->new_numero_compte . " ne convient pas au classe " . $this->new_classe);
+
+        if ($this->new_classe !== substr($this->new_numero_compte, 0, 1)) {
+            session()->flash('error', "{$this->label_numero_compte} {$this->new_numero_compte} ne convient pas à la classe {$this->new_classe}.");
             return;
         }
-        $new_compte = new Compta_comptes();
-        $new_compte->numero_compte = $this->new_numero_compte;
-        $new_compte->intitule = $this->new_intitule;
-        $new_compte->classe = $this->new_classe;
-        $new_compte->save();
+
+        Compta_comptes::create([
+            'numero_compte' => $this->new_numero_compte,
+            'intitule' => $this->new_intitule,
+            'classe' => $this->new_classe,
+        ]);
+
         session()->flash('status', 'Compte successfully created.');
+
         $this->reset(['new_numero_compte', 'new_intitule', 'new_classe']);
         $this->updateTable1();
     }
+
 
     public function edit($id)
     {
@@ -94,30 +101,38 @@ class Compte extends Component
             'update_intitule' => 'required',
             'update_classe' => 'required|max:1',
         ]);
+
         $exist = Compta_comptes::where('numero_compte', $this->update_numero_compte)
             ->where('id', '!=', $this->num_update)
             ->first();
-        if (!empty($exist)) {
-            session()->flash('error', "Compte '" . $exist['numero_compte'] . ": " . $exist['intitule'] . "' existe deja.");
+
+        if ($exist) {
+            session()->flash('error', "Compte '{$exist->numero_compte}: {$exist->intitule}' existe déjà.");
             return;
         }
-        if ($this->update_classe != $this->update_numero_compte[0]) {
-            session()->flash('error', "$this->label_numero_compte " . $this->update_numero_compte . " ne convient pas au classe " . $this->update_classe);
+
+        if ($this->update_classe !== substr($this->update_numero_compte, 0, 1)) {
+            session()->flash('error', "{$this->label_numero_compte} {$this->update_numero_compte} ne convient pas à la classe {$this->update_classe}.");
             return;
         }
-        $new_compte = Compta_comptes::find($this->num_update);
-        if (!empty($new_compte)) {
-            $new_compte->numero_compte = $this->update_numero_compte;
-            $new_compte->intitule = $this->update_intitule;
-            $new_compte->classe = $this->update_classe;
-            $new_compte->save();
-            session()->flash('status', 'Compte successfully updated.');
-        } else {
-            session()->flash('error', 'Compte not found.');
+
+        $compte = Compta_comptes::find($this->num_update);
+        if (!$compte) {
+            session()->flash('error', 'Compte non trouvé.');
+            return;
         }
+
+        $compte->update([
+            'numero_compte' => $this->update_numero_compte,
+            'intitule' => $this->update_intitule,
+            'classe' => $this->update_classe,
+        ]);
+
+        session()->flash('status', 'Compte mis à jour avec succès.');
         $this->updating = false;
         $this->updateTable1();
     }
+
 
     public function updateClose()
     {

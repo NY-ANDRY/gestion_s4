@@ -72,26 +72,31 @@ class Exercices extends Component
         $this->validate([
             'new_nom' => ['required'],
             'new_date_debut' => ['required', 'date', 'before:new_date_fin'],
-            'new_date_fin'   => ['required', 'date', 'after:new_date_debut'],
+            'new_date_fin' => ['required', 'date', 'after:new_date_debut'],
         ]);
 
-        $exist = Compta_exercices::where(function ($query) {
+        $chevauche = Compta_exercices::where(function ($query) {
             $query->where('date_debut', '<=', $this->new_date_fin)
                 ->where('date_fin', '>=', $this->new_date_debut);
         })->first();
-        if (!empty($exist)) {
-            session()->flash('error', "'" . $exist['date_debut'] . " - " . $exist['date_fin'] . "' existe deja.");
+
+        if ($chevauche) {
+            session()->flash('error', "'{$chevauche->date_debut} - {$chevauche->date_fin}' existe déjà.");
             return;
         }
-        $new_compte = new Compta_exercices();
-        $new_compte->nom = $this->new_nom;
-        $new_compte->date_debut = $this->new_date_debut;
-        $new_compte->date_fin = $this->new_date_fin;
-        $new_compte->save();
-        session()->flash('status', 'Execice successfully created.');
-        $this->reset(['new_date_debut', 'new_date_fin']);
+
+        Compta_exercices::create([
+            'nom' => $this->new_nom,
+            'date_debut' => $this->new_date_debut,
+            'date_fin' => $this->new_date_fin,
+        ]);
+
+        session()->flash('status', 'Exercice successfully created.');
+
+        $this->reset(['new_nom', 'new_date_debut', 'new_date_fin']);
         $this->updateTable1();
     }
+
 
     public function edit($id)
     {
@@ -108,28 +113,35 @@ class Exercices extends Component
         $this->validate([
             'update_nom' => ['required'],
             'update_date_debut' => ['required', 'date', 'before:update_date_fin'],
-            'update_date_fin' => ['required', 'date', 'after:update_date_debut']
+            'update_date_fin' => ['required', 'date', 'after:update_date_debut'],
         ]);
-        $exist = Compta_exercices::where(function ($query) {
+
+        $chevauche = Compta_exercices::where(function ($query) {
             $query->where('date_debut', '<=', $this->update_date_fin)
                 ->where('date_fin', '>=', $this->update_date_debut);
         })
             ->where('id', '!=', $this->num_update)
             ->first();
-        if (!empty($exist)) {
-            session()->flash('error', "'" . $exist['date_debut'] . " - " . $exist['date_fin'] . "' existe deja.");
+
+        if ($chevauche) {
+            session()->flash('error', "'{$chevauche->date_debut} - {$chevauche->date_fin}' existe déjà.");
             return;
         }
-        $new_compte = Compta_exercices::find($this->num_update);
-        if (!empty($new_compte)) {
-            $new_compte->nom = $this->update_nom;
-            $new_compte->date_debut = $this->update_date_debut;
-            $new_compte->date_fin = $this->update_date_fin;
-            $new_compte->save();
-            session()->flash('status', 'Execice successfully updated.');
-        } else {
-            session()->flash('error', 'Execice not found.');
+
+        $exercice = Compta_exercices::find($this->num_update);
+
+        if (!$exercice) {
+            session()->flash('error', "Exercice non trouvé.");
+            return;
         }
+
+        $exercice->update([
+            'nom' => $this->update_nom,
+            'date_debut' => $this->update_date_debut,
+            'date_fin' => $this->update_date_fin,
+        ]);
+
+        session()->flash('status', 'Exercice mis à jour avec succès.');
         $this->updating = false;
         $this->updateTable1();
     }
