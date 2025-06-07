@@ -161,15 +161,15 @@ class LignesEcritures extends Component
         }
     }
 
-    public function searchCompte()
+    public function searchCompte($value)
     {
-        if (empty($this->new_numero_compte) && $this->new_numero_compte != 0) {
+        if (empty($value) && $value != 0) {
             $this->comptes_search = [];
         } else {
             $result = [];
 
             foreach ($this->comptes as $key => $compte) {
-                if (str_contains(strtolower($compte->numero_compte), strtolower($this->new_numero_compte))) {
+                if (str_contains(strtolower($compte->numero_compte), strtolower($value))) {
                     $result[] = $compte;
                 }
             }
@@ -177,6 +177,16 @@ class LignesEcritures extends Component
             $this->comptes_search = $result;
         }
     }
+
+    public function searchCompteForNew()
+    {
+        $this->searchCompte($this->new_numero_compte);
+    }
+    public function searchCompteForUpdate()
+    {
+        $this->searchCompte($this->update_numero_compte);
+    }
+
     public function setNew_numero_compte($value)
     {
         $this->new_numero_compte = $value;

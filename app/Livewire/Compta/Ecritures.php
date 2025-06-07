@@ -137,14 +137,14 @@ class Ecritures extends Component
         }
     }
 
-    public function searchJournal()
+    public function searchJournal($value)
     {
-        if (empty($this->new_journal_code)) {
+        if (empty($value) && $value != 0) {
             $this->journaux_search = [];
         } else {
             $result = [];
             foreach ($this->journaux as $journal) {
-                if (str_contains(strtolower($journal->code_journal), strtolower($this->new_journal_code))) {
+                if (str_contains(strtolower($journal->code_journal), strtolower($value))) {
                     $result[] = $journal;
                 }
             }
@@ -152,9 +152,24 @@ class Ecritures extends Component
         }
     }
 
+    public function searchJournalForNew()
+    {
+        $this->searchJournal($this->new_journal_code);
+    }
+    public function searchJournalForUpdate()
+    {
+        $this->searchJournal($this->update_journal_code);
+    }
+
     public function setNew_journal_code($nom)
     {
         $this->new_journal_code = $nom;
+        $this->journaux_search = [];
+    }
+
+    public function setUpdate_journal_code($nom)
+    {
+        $this->update_journal_code = $nom;
         $this->journaux_search = [];
     }
 }

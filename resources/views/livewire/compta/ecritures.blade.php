@@ -21,7 +21,7 @@
                 <input
                     type="text" placeholder="journal"
                     class="w-full border-b-1 border-gray-400 @error('new_numero_compte') border-red-500 border-b-3 @enderror"
-                    wire:model="new_journal_code" wire:input="searchJournal">
+                    wire:model="new_journal_code" wire:input="searchJournalForNew">
                 @if (!empty($journaux_search))
 
                 <div class="absolute flex flex-col min-w-full rounded-b-sm rounded-tr-sm mr-8 pb-3 pt-2  pl-px top-full left-0 z-10 font-[is-m] bg-slate-600 text-white">
@@ -83,11 +83,20 @@
                     wire:model="update_date_ecriture">
             </div>
 
-            <div class="w-24 pr-8">
+            <div class="w-24 pr-8 relative">
                 <input
-                    type="text"
+                    type="text" placeholder="journal"
                     class="w-full border-b-1 border-gray-400 @error('update_journal_code') border-red-500 border-b-3 @enderror"
-                    wire:model="update_journal_code">
+                    wire:model="update_journal_code" wire:input="searchJournalForUpdate">
+                @if (!empty($journaux_search))
+
+                <div class="absolute flex flex-col min-w-full rounded-b-sm rounded-tr-sm mr-8 pb-3 pt-2  pl-px top-full left-0 z-10 font-[is-m] bg-slate-600 text-white">
+                    @foreach ($journaux_search as $journal)
+                    <button class="flex pl-1 pr-3 py-1 whitespace-nowrap hover:bg-black" wire:click="setUpdate_journal_code('{{ $journal->code_journal }}')">{{ $journal->code_journal }} - {{$journal->libelle}}</button>
+                    @endforeach
+                </div>
+
+                @endif
             </div>
 
             <div class="flex-1 pr-8">

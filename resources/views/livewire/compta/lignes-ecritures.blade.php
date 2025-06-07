@@ -33,7 +33,7 @@
                 <input
                     type="text" placeholder="journal"
                     class="w-full border-b-1 border-gray-400 @error('new_numero_compte') border-red-500 border-b-3 @enderror"
-                    wire:model="new_numero_compte" wire:input="searchCompte">
+                    wire:model="new_numero_compte" wire:input="searchCompteForNew">
                 @if (!empty($comptes_search))
 
                 <div class="absolute flex flex-col min-w-full rounded-b-sm rounded-tr-sm mr-8 pb-3 pt-2  pl-px top-full left-0 z-10 font-[is-m] bg-slate-600 text-white">
@@ -127,7 +127,7 @@
                 <input
                     type="text" placeholder="journal"
                     class="w-full border-b-1 border-gray-400 @error('update_numero_compte') border-red-500 border-b-3 @enderror"
-                    wire:model="update_numero_compte" wire:input="searchCompte">
+                    wire:model="update_numero_compte" wire:input="searchCompteForUpdate">
                 @if (!empty($comptes_search))
 
                 <div class="absolute flex flex-col min-w-full rounded-b-sm rounded-tr-sm mr-8 pb-3 pt-2  pl-px top-full left-0 z-10 font-[is-m] bg-slate-600 text-white">
