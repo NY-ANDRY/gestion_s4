@@ -8,7 +8,7 @@
             @endif
 
             <div class="flex h-7 pb-10 font-[is-m] text-lg text-black">
-                <div class="w-48">Periode: </div>
+                <div class="w-48">Exercice: </div>
                 <div class="flex-1 flex gap-2">
                     <span>
                         {{ !empty($exercice) ? $exercice['date_debut_fr'] : '' }}
