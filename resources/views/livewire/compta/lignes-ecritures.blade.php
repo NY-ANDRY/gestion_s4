@@ -31,7 +31,7 @@
 
             <div class="w-20 flex flex-col relative">
                 <input
-                    type="text" placeholder="journal"
+                    type="text" placeholder="compte"
                     class="w-full border-b-1 border-gray-400 @error('new_numero_compte') border-red-500 border-b-3 @enderror"
                     wire:model="new_numero_compte" wire:input="searchCompteForNew">
                 @if (!empty($comptes_search))
@@ -125,7 +125,7 @@
         <div class="px-4 h-12 flex items-center w-full transition-all rounded-sm hover:bg-neutral-100">
             <div class="w-20 pr-8 flex flex-col relative">
                 <input
-                    type="text" placeholder="journal"
+                    type="text" placeholder="compte"
                     class="w-full border-b-1 border-gray-400 @error('update_numero_compte') border-red-500 border-b-3 @enderror"
                     wire:model="update_numero_compte" wire:input="searchCompteForUpdate">
                 @if (!empty($comptes_search))
