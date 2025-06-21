@@ -13,7 +13,6 @@ class Compta_ecritures extends Model
         'date_ecriture'
     ];
 
-    // Récupérer les écritures d'un exercice donné, ordonnées par date descendante
     public static function getByExerciceId(int $id_exercice)
     {
         return self::where('id_exercice', $id_exercice)
@@ -21,7 +20,6 @@ class Compta_ecritures extends Model
             ->get();
     }
 
-    // Convertir les données au format utilisé dans le composant
     public static function convertData($data)
     {
         Carbon::setLocale('fr');
@@ -36,7 +34,6 @@ class Compta_ecritures extends Model
         });
     }
 
-    // Rechercher écritures par filtre (date ou libelle)
     public static function searchByValue(string $value)
     {
         return self::where(function ($query) use ($value) {
